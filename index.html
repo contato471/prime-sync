@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Sync — Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #C33539; --red-d: #9e2a2d; --red-l: #fdf3f3;
+  --green: #1A9E75; --green-l: #eaf7f2;
+  --blue: #1a6bb5; --blue-l: #eaf2fb;
+  --amber-l: #fffbeb;
+  --bg: #f4f3f0;
+  --surface: #ffffff;
+  --surface2: #f0ede9;
+  --border: #e2ddd8; --border2: #ccc8c2;
+  --text: #1c1917; --text2: #6b6560; --text3: #a8a29e;
+  --r: 14px; --rs: 9px;
+  --sh: 0 1px 2px rgba(0,0,0,.05), 0 4px 20px rgba(0,0,0,.05);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2.5rem 1rem 5rem;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 10%, rgba(195,53,57,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 90%, rgba(26,107,181,.04) 0%, transparent 60%);
+}
+.wrap { max-width: 560px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* ─── HEADER ─── */
+.hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; animation: up .45s ease both; }
+.hd-left { display: flex; align-items: center; gap: 12px; }
+.logo-box {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: var(--red); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(195,53,57,.35);
+}
+.logo-box svg { width: 19px; height: 19px; }
+.hd-text {}
+.hd-name { font-size: 15px; font-weight: 600; letter-spacing: -.02em; line-height: 1; }
+.hd-sub { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
+.conn-pill {
+  font-size: 11px; font-weight: 500; padding: 4px 11px; border-radius: 99px;
+  background: var(--green-l); color: var(--green);
+  border: 1px solid rgba(26,158,117,.2);
+  opacity: 0; transform: scale(.9); transition: all .25s;
+}
+.conn-pill.on { opacity: 1; transform: scale(1); }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1.4rem 1.5rem;
+  box-shadow: var(--sh); margin-bottom: 1rem;
+  animation: up .45s ease both;
+}
+.card:nth-child(2) { animation-delay: .05s; }
+.card:nth-child(3) { animation-delay: .1s; }
+.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+.card-label { font-size: 10.5px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
+.card-toggle { font-size: 12px; color: var(--red); cursor: pointer; font-weight: 500; user-select: none; }
+.card-toggle:hover { opacity: .75; }
+
+/* ─── FIELDS ─── */
+.field { margin-bottom: 12px; }
+.field:last-of-type { margin-bottom: 0; }
+label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.inp-wrap { position: relative; }
+.inp-ico {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; color: var(--text3); pointer-events: none;
+}
+input[type=text], input[type=password] {
+  width: 100%; padding: 8px 11px 8px 33px;
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .01em;
+  border: 1px solid var(--border); border-radius: var(--rs);
+  background: var(--surface2); color: var(--text);
+  outline: none; transition: border-color .15s, box-shadow .15s, background .15s;
+}
+input:focus { border-color: var(--red); background: #fff; box-shadow: 0 0 0 3px rgba(195,53,57,.09); }
+input.ok { border-color: var(--green); background: var(--green-l); color: #085041; }
+input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; font-size: 12px; }
+
+/* ─── BUTTONS ─── */
+.btn-row { display: flex; gap: 8px; margin-top: 1.1rem; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--rs); border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+.btn-red { background: var(--red); color: #fff; box-shadow: 0 2px 8px rgba(195,53,57,.28); }
+.btn-red:hover:not(:disabled) { background: var(--red-d); box-shadow: 0 4px 14px rgba(195,53,57,.38); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+
+/* ─── STATUS ─── */
+.status {
+  display: none; align-items: center; gap: 8px;
+  font-size: 12.5px; line-height: 1.45;
+  padding: 10px 13px; border-radius: var(--rs); margin-top: 11px;
+}
+.status.show { display: flex; animation: fadeIn .2s ease; }
+.status.loading { background: var(--blue-l); color: var(--blue); border: 1px solid rgba(26,107,181,.15); }
+.status.success { background: var(--green-l); color: #074f3a; border: 1px solid rgba(26,158,117,.2); }
+.status.error { background: var(--red-l); color: #7a1f1f; border: 1px solid rgba(195,53,57,.15); }
+.status.idle { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-b { background: var(--blue); animation: blink 1.2s infinite; }
+.dot-g { background: var(--green); }
+.dot-r { background: var(--red); }
+.dot-k { background: var(--text3); }
+
+/* ─── STATS ─── */
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.1rem; }
+.stat { background: var(--surface2); border-radius: 10px; padding: 13px 10px; text-align: center; border: 1px solid var(--border); }
+.stat-n { font-size: 28px; font-weight: 600; letter-spacing: -.04em; line-height: 1; color: var(--text); }
+.stat-n.g { color: var(--green); }
+.stat-n.r { color: var(--red); }
+.stat-l { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+
+/* ─── LEADS ─── */
+.leads { display: flex; flex-direction: column; gap: 7px; margin-top: 13px; }
+.lead {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 11px 13px;
+  transition: border-color .15s, background .15s;
+  animation: up .3s ease both;
+}
+.lead:hover { background: #eae7e3; border-color: var(--border2); }
+.lead.sent { background: #edf8f4; border-color: rgba(26,158,117,.28); }
+.av {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12.5px; font-weight: 600; flex-shrink: 0; letter-spacing: -.01em;
+}
+.av-m { background: #ede9fe; color: #4c1d95; }
+.av-a { background: #d1fae5; color: #064e3b; }
+.av-b { background: #fef3c7; color: #78350f; }
+.av-o { background: #f1efec; color: #57534e; }
+.l-info { flex: 1; min-width: 0; }
+.l-name { font-size: 13px; font-weight: 600; }
+.l-phone { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+.l-sent { font-size: 11px; color: var(--green); margin-top: 2px; font-weight: 500; }
+.badge {
+  font-size: 10.5px; padding: 3px 9px; border-radius: 99px;
+  font-weight: 600; flex-shrink: 0; letter-spacing: .01em;
+}
+.bg-m { background: #ede9fe; color: #4c1d95; border: 1px solid rgba(109,40,217,.15); }
+.bg-a { background: #d1fae5; color: #064e3b; border: 1px solid rgba(16,185,129,.2); }
+.bg-b { background: #fef3c7; color: #78350f; border: 1px solid rgba(217,119,6,.2); }
+.bg-o { background: #f1efec; color: #57534e; border: 1px solid var(--border); }
+/* Novos empreendimentos */
+.av-blc { background: #fce7f3; color: #831843; }
+.av-rr  { background: #e0f2fe; color: #0c4a6e; }
+.av-cac { background: #f0fdf4; color: #14532d; }
+.av-vm1 { background: #fff7ed; color: #7c2d12; }
+.bg-blc { background: #fce7f3; color: #831843; border: 1px solid rgba(190,24,93,.18); }
+.bg-rr  { background: #e0f2fe; color: #0c4a6e; border: 1px solid rgba(14,165,233,.18); }
+.bg-cac { background: #dcfce7; color: #14532d; border: 1px solid rgba(22,163,74,.18); }
+.bg-vm1 { background: #ffedd5; color: #7c2d12; border: 1px solid rgba(234,88,12,.18); }
+
+.empty { text-align: center; padding: 2.2rem 0; color: var(--text3); font-size: 13px; }
+.empty-i { font-size: 30px; margin-bottom: 8px; }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: var(--text3); letter-spacing: .02em; animation: up .45s .2s ease both; }
+
+@keyframes up { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="hd">
+    <div class="hd-left">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="hd-text">
+        <div class="hd-name">Prime Sync</div>
+        <div class="hd-sub">Trello → Google Sheets</div>
+      </div>
+    </div>
+    <div class="conn-pill" id="connPill">● Conectado</div>
+  </div>
+
+  <!-- Config card -->
+  <div class="card">
+    <div class="card-top">
+      <span class="card-label">Configuração</span>
+      <span class="card-toggle" id="toggleBtn" onclick="toggleConfig()">ocultar ↑</span>
+    </div>
+    <div id="cfgBody">
+      <div class="field">
+        <label>API Key do Trello</label>
+        <div class="inp-wrap">
+          <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <input type="text" id="apiKey" placeholder="Chave de API" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Token do Trello</label>
+        <div class="inp-wrap">
+          <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          <input type="password" id="apiToken" placeholder="Token de acesso" />
+        </div>
+      </div>
+      <div class="field">
+        <label>URL do Google Apps Script</label>
+        <div class="inp-wrap">
+          <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <input type="text" id="scriptUrl" placeholder="https://script.google.com/..." />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-red" onclick="testConn()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+          Testar conexão
+        </button>
+        <button class="btn btn-ghost" onclick="saveCfg()">Salvar</button>
+      </div>
+      <div id="connStatus" class="status"></div>
+    </div>
+  </div>
+
+  <!-- Sync card -->
+  <div class="card">
+    <div class="card-top">
+      <span class="card-label">Leads — LEAD NOVO</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="sTotal">—</div><div class="stat-l">Encontrados</div></div>
+      <div class="stat"><div class="stat-n g" id="sSent">—</div><div class="stat-l">Enviados</div></div>
+      <div class="stat"><div class="stat-n r" id="sFail">—</div><div class="stat-l">Falhas</div></div>
+    </div>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn btn-red" id="btnSync" onclick="syncLeads()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        Buscar e enviar
+      </button>
+      <button class="btn btn-ghost" onclick="preview()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Só visualizar
+      </button>
+    </div>
+    <div id="syncStatus" class="status"></div>
+    <div id="leadsList"></div>
+  </div>
+
+  <div class="footer">Prime Empreendimentos &nbsp;·&nbsp; Sincronização de Leads</div>
+</div>
+
+<script>
+// ─── CREDENCIAIS FIXAS ──────────────────────────────────────────────────────
+const DEFAULTS = {
+  apiKey:    '97afcc00de05c98554fc78eeee132d0a',
+  apiToken:  'ATTAda0170c83e12dfe5aa231df3ffdacc1f0491a3b18ca0f02bef6366459c08f3d20572412F',
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbzosxQD7MKpzDtDFGxx8x8OhXhgXZSm05trtZbJCXCeiFcHQBVaShwJeT0FWJ5OVr2HuA/exec'
+};
+// ───────────────────────────────────────────────────────────────────────────
+
+const BOARD = '0ERCXChY';
+let leads = [], sent = new Set(), cfgOpen = true;
+
+function vals() {
+  return {
+    k: document.getElementById('apiKey').value.trim(),
+    t: document.getElementById('apiToken').value.trim(),
+    s: document.getElementById('scriptUrl').value.trim()
+  };
+}
+
+function init() {
+  try {
+    const saved = localStorage.getItem('prime_cfg');
+    const cfg = saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
+    document.getElementById('apiKey').value    = cfg.apiKey    || '';
+    document.getElementById('apiToken').value  = cfg.apiToken  || '';
+    document.getElementById('scriptUrl').value = cfg.scriptUrl || '';
+    const s = localStorage.getItem('prime_sent');
+    if (s) sent = new Set(JSON.parse(s));
+    markOk();
+  } catch(e) {}
+}
+
+function markOk() {
+  ['apiKey','apiToken','scriptUrl'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('ok', !!el.value.trim());
+  });
+}
+
+function saveCfg() {
+  const v = vals();
+  try { localStorage.setItem('prime_cfg', JSON.stringify({ apiKey: v.k, apiToken: v.t, scriptUrl: v.s })); } catch(e) {}
+  markOk();
+  st('connStatus', 'Configuração salva no navegador.', 'idle');
+}
+
+function toggleConfig() {
+  cfgOpen = !cfgOpen;
+  document.getElementById('cfgBody').style.display = cfgOpen ? '' : 'none';
+  document.getElementById('toggleBtn').textContent = cfgOpen ? 'ocultar ↑' : 'mostrar ↓';
+}
+
+function st(id, msg, type) {
+  const el = document.getElementById(id);
+  const dc = { loading:'dot-b', success:'dot-g', error:'dot-r', idle:'dot-k' };
+  el.className = 'status show ' + type;
+  el.innerHTML = `<span class="dot ${dc[type]||'dot-k'}"></span>${msg}`;
+}
+
+async function testConn() {
+  const { k, t } = vals();
+  if (!k || !t) { st('connStatus','Preencha API Key e Token.','error'); return; }
+  st('connStatus','Conectando ao Trello...','loading');
+  try {
+    const r = await fetch(`https://api.trello.com/1/boards/${BOARD}?key=${k}&token=${t}`);
+    if (!r.ok) throw new Error(`Erro ${r.status}`);
+    const d = await r.json();
+    st('connStatus', `Conectado: ${d.name}`, 'success');
+    document.getElementById('connPill').classList.add('on');
+  } catch(e) {
+    st('connStatus', `Erro: ${e.message}`, 'error');
+    document.getElementById('connPill').classList.remove('on');
+  }
+}
+
+async function listId(k, t) {
+  const r = await fetch(`https://api.trello.com/1/boards/${BOARD}/lists?key=${k}&token=${t}`);
+  if (!r.ok) throw new Error('Erro ao buscar listas.');
+  const ls = await r.json();
+  const f = ls.find(l => l.name.toUpperCase().includes('LEAD NOVO'));
+  if (!f) throw new Error('Lista "LEAD NOVO" não encontrada no quadro.');
+  return f.id;
+}
+
+async function getCards(lid, k, t) {
+  const r = await fetch(`https://api.trello.com/1/lists/${lid}/cards?key=${k}&token=${t}`);
+  if (!r.ok) throw new Error('Erro ao buscar cards.');
+  return r.json();
+}
+
+// ─── EMPREENDIMENTOS ────────────────────────────────────────────────────────
+// label: nome exibido no sistema
+// code:  abreviação enviada para a planilha
+// match: termos buscados no card (ordem importa — mais específico primeiro)
+const EMPREENDIMENTOS = [
+  { label: 'Caminho das Árvores — S. Gonçalo', code: 'RR',  match: ['são gonçalo','sao goncalo','s. gonçalo','gonçalo','s gonçalo'] },
+  { label: 'Caminho das Árvores — Cachoeira',  code: 'CAC', match: ['caminho das arvores cachoeira','caminho das árvores cachoeira','arvores cachoeira','árvores cachoeira'] },
+  { label: 'Bom Viver — Conceição da Feira',   code: 'VM1', match: ['conceição','conceicao','bom viver conceição','bom viver conceicao'] },
+  { label: 'Belém Cachoeira',                  code: 'BLC', match: ['belém cachoeira','belem cachoeira','belém','belem'] },
+  { label: 'Masterville',                      code: 'MVE', match: ['masterville'] },
+  { label: 'Alta Vista',                       code: 'AV',  match: ['alta vista','altavista'] },
+  { label: 'Bom Viver — Campo Formoso',        code: 'BI',  match: ['bom viver','bomviver'] },
+];
+// ────────────────────────────────────────────────────────────────────────────
+
+function detectLot(text) {
+  const hay = text.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos para matching
+    ;
+  const hayOrig = text.toLowerCase();
+  for (const emp of EMPREENDIMENTOS) {
+    for (const term of emp.match) {
+      const termNorm = term.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (hay.includes(termNorm) || hayOrig.includes(term)) return emp;
+    }
+  }
+  return { label: 'Outro', code: 'OUTRO' };
+}
+
+function parse(card) {
+  const raw = card.name || '';
+  const firstName = raw.split(/[\s|–\-]/)[0].replace(/[^\wÀ-ú]/g, '').trim() || raw.slice(0, 10);
+  const haystack = raw + ' ' + (card.desc || '');
+  const emp = detectLot(haystack);
+  let phone = '';
+  for (const line of (card.desc || '').split('\n')) {
+    const up = line.toUpperCase();
+    if (up.includes('WHATSAPP:') && !up.includes('DIRETO')) {
+      const n = line.replace(/[^0-9]/g, '').replace(/^55/, '');
+      if (n.length === 11)      phone = `(${n.slice(0,2)}) ${n[2]}${n.slice(3,7)}-${n.slice(7)}`;
+      else if (n.length === 10) phone = `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+      else phone = n;
+      break;
+    }
+  }
+  return { id: card.id, firstName, lot: emp.label, code: emp.code, phone };
+}
+
+const AV_CLASSES = {
+  'MVE':'av-m', 'AV':'av-a', 'BI':'av-b', 'BLC':'av-blc',
+  'RR':'av-rr', 'CAC':'av-cac', 'VM1':'av-vm1'
+};
+const BG_CLASSES = {
+  'MVE':'bg-m', 'AV':'bg-a', 'BI':'bg-b', 'BLC':'bg-blc',
+  'RR':'bg-rr', 'CAC':'bg-cac', 'VM1':'bg-vm1'
+};
+function avClass(code) { return AV_CLASSES[code] || 'av-o'; }
+function bgClass(code)  { return BG_CLASSES[code] || 'bg-o'; }
+
+function render(arr) {
+  const el = document.getElementById('leadsList');
+  if (!arr.length) { el.innerHTML = '<div class="empty"><div class="empty-i">📭</div>Nenhum lead encontrado na lista.</div>'; return; }
+  el.innerHTML = '<div class="leads">' + arr.map((l, i) => `
+    <div class="lead${sent.has(l.id)?' sent':''}" style="animation-delay:${i*.04}s">
+      <div class="av ${avClass(l.code)}">${l.firstName.slice(0,2).toUpperCase()}</div>
+      <div class="l-info">
+        <div class="l-name">${l.firstName}</div>
+        <div class="l-phone">${l.phone||'<span style="color:var(--text3);font-size:11px">sem telefone</span>'}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:1px">${l.lot}</div>
+        ${sent.has(l.id)?'<div class="l-sent">✓ enviado para a planilha</div>':''}
+      </div>
+      <span class="badge ${bgClass(l.code)}" title="${l.lot}">${l.code}</span>
+    </div>`).join('') + '</div>';
+}
+
+function upStats(total, s, f) {
+  document.getElementById('sTotal').textContent = total ?? '—';
+  document.getElementById('sSent').textContent  = s     ?? '—';
+  document.getElementById('sFail').textContent  = f     ?? '—';
+}
+
+async function preview() {
+  const { k, t } = vals();
+  if (!k || !t) { st('syncStatus','Configure as credenciais primeiro.','error'); return; }
+  st('syncStatus','Buscando leads em "LEAD NOVO"...','loading');
+  try {
+    const lid = await listId(k, t);
+    const cards = await getCards(lid, k, t);
+    leads = cards.map(parse);
+    upStats(leads.length, leads.filter(l => sent.has(l.id)).length, '—');
+    render(leads);
+    st('syncStatus', `${leads.length} lead(s) encontrado(s). Clique em "Buscar e enviar" para cadastrar.`, 'success');
+    document.getElementById('connPill').classList.add('on');
+  } catch(e) { st('syncStatus', `Erro: ${e.message}`, 'error'); }
+}
+
+async function syncLeads() {
+  const { k, t, s } = vals();
+  if (!k || !t) { st('syncStatus','Configure as credenciais primeiro.','error'); return; }
+  if (!s)       { st('syncStatus','Informe a URL do Google Apps Script.','error'); return; }
+  const btn = document.getElementById('btnSync');
+  btn.disabled = true;
+  st('syncStatus','Buscando leads no Trello...','loading');
+  try {
+    const lid = await listId(k, t);
+    const cards = await getCards(lid, k, t);
+    leads = cards.map(parse);
+    const toSend = leads.filter(l => !sent.has(l.id));
+
+    if (!toSend.length) {
+      upStats(leads.length, leads.filter(l=>sent.has(l.id)).length, 0);
+      render(leads);
+      st('syncStatus','Todos os leads já foram enviados anteriormente.','success');
+      btn.disabled = false;
+      return;
+    }
+
+    st('syncStatus', `Enviando ${toSend.length} lead(s) para o Google Sheets...`, 'loading');
+    let ok = 0, fail = 0;
+    for (const lead of toSend) {
+      try {
+        await fetch(s, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome: lead.firstName, loteamento: lead.code, telefone: lead.phone, cardId: lead.id })
+        });
+        sent.add(lead.id);
+        ok++;
+      } catch(e) { fail++; }
+    }
+    try { localStorage.setItem('prime_sent', JSON.stringify([...sent])); } catch(e) {}
+    upStats(leads.length, leads.filter(l=>sent.has(l.id)).length, fail);
+    render(leads);
+    st('syncStatus', fail ? `${ok} enviado(s) · ${fail} falha(s)` : `${ok} lead(s) enviado(s) com sucesso.`, fail ? 'error' : 'success');
+    document.getElementById('connPill').classList.add('on');
+  } catch(e) {
+    st('syncStatus', `Erro: ${e.message}`, 'error');
+  }
+  btn.disabled = false;
+}
+
+init();
+['apiKey','apiToken','scriptUrl'].forEach(id => document.getElementById(id).addEventListener('input', markOk));
+</script>
+</body>
+</html>
