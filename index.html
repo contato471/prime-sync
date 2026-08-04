@@ -106,6 +106,34 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .btn-red:hover:not(:disabled) { background: var(--red-d); box-shadow: 0 4px 14px rgba(195,53,57,.38); }
 .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
 .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+.btn-warn { background: transparent; color: #92400e; border: 1px solid #fbbf24; }
+.btn-warn:hover { background: #fffbeb; border-color: #f59e0b; }
+.btn-warn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1.75rem;
+  max-width: 360px; width: 100%;
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  animation: up .25s ease;
+}
+.modal-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: #fef3c7; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.modal-body { font-size: 13px; color: var(--text2); line-height: 1.55; margin-bottom: 1.25rem; }
+.modal-body strong { color: var(--text); font-weight: 600; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
 
 /* ─── STATUS ─── */
 .status {
@@ -262,12 +290,34 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Só visualizar
       </button>
+      <button class="btn btn-warn" id="btnResend" onclick="confirmResend()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>
+        Reenviar tudo
+      </button>
     </div>
     <div id="syncStatus" class="status"></div>
     <div id="leadsList"></div>
   </div>
 
   <div class="footer">Prime Empreendimentos &nbsp;·&nbsp; Sincronização de Leads</div>
+</div>
+
+<!-- Modal de confirmação de reenvio -->
+<div class="modal-overlay" id="resendModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>
+    </div>
+    <div class="modal-title">Reenviar todos os leads?</div>
+    <div class="modal-body">
+      Isso vai <strong>limpar o histórico de envios</strong> e reenviar <strong>todos os leads</strong> da lista "LEAD NOVO" para a planilha — incluindo os que já foram enviados antes.<br><br>
+      Use isso apenas se sua planilha estava com filtro ativo e os leads não foram registrados.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-red" onclick="resendAll()">Confirmar reenvio</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -500,6 +550,22 @@ async function syncLeads() {
     st('syncStatus', `Erro: ${e.message}`, 'error');
   }
   btn.disabled = false;
+}
+
+function confirmResend() {
+  document.getElementById('resendModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('resendModal').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('resendModal')) closeModal();
+}
+async function resendAll() {
+  closeModal();
+  sent.clear();
+  try { localStorage.removeItem('prime_sent'); } catch(e) {}
+  await syncLeads();
 }
 
 init();
