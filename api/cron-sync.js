@@ -31,8 +31,8 @@ const BOARDS = {
     board: '6a723e5ac2393c5abb4f7a0f',
     listId: '6a723e6c4e671cc5ca104614', // lista "LEAD NOVO" — fixo, já não muda
     scriptUrl: 'https://script.google.com/macros/s/AKfycbyx57S0nGXwt9TPhKuujKlmQT2B0Qelz1AQxy76molmoZ3-tqUdS-SYG_dfQ4nCuZwtvA/exec',
-    parse: parseStandard,
-    payload: l => ({ nome: l.firstName, loteamento: 'CBII', telefone: l.phone, origem: 'Facebook PT', cardId: l.id })
+    parse: parseCbii,
+    payload: l => ({ nome: l.firstName, loteamento: 'CBII', telefone: l.phone, origem: 'Facebook PT', cardId: l.id, campanha: l.campanha || '', conjuntoAnuncios: l.conjuntoAnuncios || '', criativo: l.criativo || '' })
   },
   prime: {
     board: '818YF3D6',
@@ -129,10 +129,47 @@ function firstNameOf(card) {
   return raw.split(/[\s|–\-]/)[0].replace(/[^\wÀ-ú]/g, '').trim() || raw.slice(0, 10);
 }
 
+function extractCampanha(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**campanha\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
+function extractConjuntoAnuncios(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**conjunto de an[uú]ncios\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
+function extractCriativo(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**criativo\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
 function parseStandard(card) {
   const firstName = firstNameOf(card);
   const emp = detectLot((card.name || '') + ' ' + (card.desc || ''));
   return { id: card.id, firstName, code: emp.code, phone: extractPhone(card) };
+}
+
+function parseCbii(card) {
+  const firstName = firstNameOf(card);
+  return {
+    id: card.id,
+    firstName,
+    code: 'CBII',
+    phone: extractPhone(card),
+    campanha: extractCampanha(card),
+    conjuntoAnuncios: extractConjuntoAnuncios(card),
+    criativo: extractCriativo(card)
+  };
 }
 
 function parsePrime(card) {

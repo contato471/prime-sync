@@ -424,8 +424,8 @@ const BOARDS = {
   cbii: {
     board: '6a723e5ac2393c5abb4f7a0f',
     scriptField: 'scriptUrlCbii',
-    parse: parseStandard,
-    payload: l => ({ nome: l.firstName, loteamento: 'CBII', telefone: l.phone, origem: 'Facebook PT', cardId: l.id })
+    parse: parseCbii,
+    payload: l => ({ nome: l.firstName, loteamento: 'CBII', telefone: l.phone, origem: 'Facebook PT', cardId: l.id, campanha: l.campanha || '', conjuntoAnuncios: l.conjuntoAnuncios || '', criativo: l.criativo || '' })
   },
   prime: {
     board: '818YF3D6',
@@ -620,13 +620,49 @@ function firstNameOf(card) {
   return raw.split(/[\s|–\-]/)[0].replace(/[^\wÀ-ú]/g, '').trim() || raw.slice(0, 10);
 }
 
-// Parser padrão (Balzani / CBII)
+// Parser padrão (Balzani)
 function parseStandard(card) {
   const firstName = firstNameOf(card);
   const haystack = (card.name || '') + ' ' + (card.desc || '');
   const emp = detectLot(haystack);
   const phone = extractPhone(card);
   return { id: card.id, firstName, lot: emp.label, code: emp.code, phone };
+}
+
+function extractCampanha(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**campanha\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
+function extractConjuntoAnuncios(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**conjunto de an[uú]ncios\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
+function extractCriativo(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*\**criativo\**\s*:\s*(.+)$/i);
+    if (m) return m[1].replace(/\*/g, '').trim();
+  }
+  return '';
+}
+
+// Parser do CBII (também lê campanha/conjunto de anúncios/criativo, quando disponíveis)
+function parseCbii(card) {
+  const firstName = firstNameOf(card);
+  const phone = extractPhone(card);
+  return {
+    id: card.id, firstName, lot: 'Sítios Campo Belo II', code: 'CBII', phone,
+    campanha: extractCampanha(card),
+    conjuntoAnuncios: extractConjuntoAnuncios(card),
+    criativo: extractCriativo(card)
+  };
 }
 
 // O quadro "Leads Geral" costuma trazer uma linha explícita "Empreendimento: XX"
