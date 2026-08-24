@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Sync — Documentação do Sistema</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #C33539; --red-d: #9e2a2d; --red-l: #fdf3f3;
+  --green: #1A9E75; --green-l: #eaf7f2;
+  --blue: #1a6bb5; --blue-l: #eaf2fb;
+  --amber: #b45309; --amber-l: #fffbeb; --amber-b: #fbbf24;
+  --purple: #3b2e7a; --purple-l: #f2f0fa;
+  --bg: #f4f3f0; --surface: #fff; --surface2: #f0ede9;
+  --border: #e2ddd8; --border2: #ccc8c2;
+  --text: #1c1917; --text2: #6b6560; --text3: #a8a29e;
+  --r: 14px; --rs: 9px;
+  --sh: 0 1px 2px rgba(0,0,0,.05), 0 4px 20px rgba(0,0,0,.05);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+code, .mono { font-family: 'DM Mono', monospace; }
+
+/* Layout */
+.shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+@media (max-width: 900px) { .shell { grid-template-columns: 1fr; } .nav { position: static; height: auto; } }
+
+/* Sidebar */
+.nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  background: #17140f; color: #e8e4de; padding: 1.6rem 1.2rem;
+  border-right: 1px solid #2a2621;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 1.8rem; }
+.nav-logo-box { width: 32px; height: 32px; border-radius: 9px; background: var(--red); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-logo-box svg { width: 16px; height: 16px; }
+.nav-title { font-size: 14px; font-weight: 600; }
+.nav-sub { font-size: 10.5px; color: #a09a90; margin-top: 1px; }
+.nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #7a7469; margin: 1.3rem 0 .5rem; font-weight: 600; }
+.nav a { display: block; padding: 7px 10px; border-radius: 8px; color: #cbc6be; text-decoration: none; font-size: 13px; margin-bottom: 2px; transition: background .15s, color .15s; }
+.nav a:hover { background: #241f19; color: #fff; }
+.nav-updated { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #2a2621; font-size: 10.5px; color: #7a7469; }
+
+/* Main content */
+main { padding: 3rem 3.5rem 6rem; max-width: 880px; }
+@media (max-width: 700px) { main { padding: 2rem 1.2rem 4rem; } }
+
+section { margin-bottom: 3.2rem; scroll-margin-top: 1.5rem; }
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
+h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 4px; display: flex; align-items: center; gap: 9px; }
+h2 .num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); font-weight: 500; }
+.lead { color: var(--text2); font-size: 14.5px; margin-bottom: 1.4rem; }
+p { margin-bottom: .9rem; font-size: 14px; color: var(--text2); }
+p strong, li strong { color: var(--text); font-weight: 600; }
+ul, ol { margin: 0 0 1rem 1.2rem; font-size: 14px; color: var(--text2); }
+li { margin-bottom: 5px; }
+a.link { color: var(--red); text-decoration: none; border-bottom: 1px solid rgba(195,53,57,.3); }
+a.link:hover { border-color: var(--red); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 1.4rem 1.5rem; box-shadow: var(--sh); margin-bottom: 1rem; }
+.card-h { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
+
+/* Fluxo diagram */
+.flow { display: flex; align-items: stretch; gap: 6px; flex-wrap: wrap; margin: 1rem 0 1.3rem; }
+.flow-step {
+  flex: 1; min-width: 130px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 13px; font-size: 12.5px;
+}
+.flow-step .t { font-weight: 700; margin-bottom: 3px; font-size: 12.5px; }
+.flow-step .d { color: var(--text3); font-size: 11px; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; color: var(--text3); font-size: 16px; flex: 0 0 22px; }
+@media (max-width: 700px) { .flow { flex-direction: column; } .flow-arrow { transform: rotate(90deg); } }
+
+.tag { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 2px 9px; border-radius: 99px; margin-right: 6px; }
+.tag-red { background: var(--red-l); color: var(--red-d); }
+.tag-green { background: var(--green-l); color: var(--green); }
+.tag-blue { background: var(--blue-l); color: var(--blue); }
+.tag-purple { background: var(--purple-l); color: var(--purple); }
+.tag-amber { background: var(--amber-l); color: var(--amber); border: 1px solid var(--amber-b); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); font-weight: 600; }
+td.mono-cell { font-family: 'DM Mono', monospace; font-size: 11.5px; word-break: break-all; color: var(--text2); }
+
+details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rs); margin-bottom: 8px; overflow: hidden; }
+summary { padding: 12px 15px; font-size: 13.5px; font-weight: 600; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: '▸'; color: var(--text3); font-size: 11px; transition: transform .15s; }
+details[open] summary::before { transform: rotate(90deg); }
+.details-body { padding: 0 15px 14px; font-size: 13.5px; color: var(--text2); }
+.details-body ol, .details-body ul { margin-left: 1.1rem; }
+
+.alert { border-radius: var(--rs); padding: 12px 15px; font-size: 13px; margin-bottom: 1rem; display: flex; gap: 10px; }
+.alert-amber { background: var(--amber-l); border: 1px solid var(--amber-b); color: #78350f; }
+.alert-red { background: var(--red-l); border: 1px solid rgba(195,53,57,.25); color: #7a1f1f; }
+.alert-blue { background: var(--blue-l); border: 1px solid rgba(26,107,181,.2); color: #0c3f6e; }
+
+.risk-row { display: flex; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.risk-row:last-child { border-bottom: none; }
+.risk-lvl { flex: 0 0 74px; font-size: 10.5px; font-weight: 700; padding: 3px 0; text-align: center; border-radius: 6px; height: fit-content; }
+.risk-hi { background: var(--red-l); color: var(--red-d); }
+.risk-md { background: var(--amber-l); color: var(--amber); }
+.risk-lo { background: var(--blue-l); color: var(--blue); }
+.risk-txt .t { font-weight: 600; font-size: 13.5px; margin-bottom: 2px; }
+.risk-txt .d { font-size: 12.5px; color: var(--text2); }
+
+.footer-note { font-size: 11.5px; color: var(--text3); margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-logo-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="nav-title">Prime Sync</div>
+        <div class="nav-sub">Documentação do sistema</div>
+      </div>
+    </div>
+
+    <div class="nav-section">Entenda o sistema</div>
+    <a href="#visao-geral">Visão geral</a>
+    <a href="#fluxos">Os 3 fluxos de leads</a>
+    <a href="#sistemas">Sistemas usados</a>
+
+    <div class="nav-section">Quando algo quebra</div>
+    <a href="#erros">Erros comuns</a>
+    <a href="#protocolo">Protocolo de emergência</a>
+    <a href="#fragil">Pontos mais frágeis</a>
+
+    <div class="nav-section">Manutenção</div>
+    <a href="#lembretes">Lembretes futuros</a>
+    <a href="#referencia">Referência técnica</a>
+
+    <div class="nav-updated">Última atualização<br>12 de agosto de 2026</div>
+  </nav>
+
+  <main>
+
+    <section id="visao-geral">
+      <h1>Como o Prime Sync funciona</h1>
+      <p class="lead">Guia de referência pra qualquer pessoa que precise entender, operar ou dar manutenção nesse sistema — sem precisar reconstruir o histórico do zero.</p>
+
+      <div class="alert alert-blue">
+        <span>ℹ️</span>
+        <div>O Prime Sync existe pra fazer uma coisa: <strong>pegar leads que chegam por diferentes canais (anúncios, portais imobiliários, WhatsApp) e colocar eles automaticamente na planilha certa</strong>, sem ninguém precisar copiar e colar nada.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">Em uma frase</div>
+        <p style="margin-bottom:0">Leads entram no Trello (por 3 caminhos diferentes) → um robô que roda sozinho a cada 1-2 minutos busca esses leads → envia pra planilha do Google Sheets certa, sem duplicar.</p>
+      </div>
+    </section>
+
+    <section id="fluxos">
+      <h2><span class="num">01</span> Os 3 fluxos de leads</h2>
+      <p class="lead">Existem 3 origens de lead diferentes, cada uma com seu próprio caminho até a planilha final.</p>
+
+      <div class="card">
+        <div class="card-h"><span class="tag tag-red">Balzani</span>Anúncios de imóveis populares</div>
+        <div class="flow">
+          <div class="flow-step"><div class="t">Meta Ads</div><div class="d">Campanhas Facebook/Instagram</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Trello</div><div class="d">CRM [CAMPANHAS BALZANI]<br>lista "LEAD NOVO"</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">cron-sync</div><div class="d">roda a cada 1-2 min</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Google Sheets</div><div class="d">aba "Leads Balzani"</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><span class="tag tag-green">CBII</span>Sítios Campo Belo II (segmento premium)</div>
+        <div class="flow">
+          <div class="flow-step"><div class="t">Meta Lead Ads</div><div class="d">Formulário nativo do Facebook</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Webhook CRM-CBII</div><div class="d">projeto Vercel próprio</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Trello</div><div class="d">CRM [SÍTIOS CAMPO BELO II]<br>lista "LEAD NOVO"</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">cron-sync</div><div class="d">roda a cada 1-2 min</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Google Sheets</div><div class="d">aba "Leads CBII"</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><span class="tag tag-purple">Leads Geral</span>Portais imobiliários (Canal Pro, Chaves na Mão, OLX, Zap, Viva Real)</div>
+        <div class="flow">
+          <div class="flow-step"><div class="t">E-mail do portal</div><div class="d">encaminhado pra Gmail</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">check-emails</div><div class="d">lê a caixa via IMAP, roda a cada 1-2 min</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Trello</div><div class="d">CRM [LEADS PRIME]<br>lista "LEAD NOVO"</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">cron-sync</div><div class="d">roda a cada 1-2 min</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="t">Google Sheets</div><div class="d">aba "Leads Geral"</div></div>
+        </div>
+      </div>
+
+      <p><strong>Ponto em comum:</strong> os 3 fluxos convergem no mesmo robô (<code>cron-sync</code>) e na mesma planilha ("LEADS PRIME 2026"), só em abas diferentes. Cada card do Trello só é considerado "enviado" quando o Card ID dele aparece gravado numa coluna específica da planilha — é assim que o sistema evita duplicar o mesmo lead a cada ciclo.</p>
+    </section>
+
+    <section id="sistemas">
+      <h2><span class="num">02</span> Sistemas usados</h2>
+      <table>
+        <tr><th>Sistema</th><th>Papel nesse fluxo</th></tr>
+        <tr><td><strong>Trello</strong></td><td>Guarda os leads como cards em 3 quadros diferentes. É o "estoque" temporário antes de virar linha na planilha.</td></tr>
+        <tr><td><strong>Gmail</strong> (leadsprimecanalpro@gmail.com)</td><td>Recebe e-mails encaminhados dos portais imobiliários. Lido via IMAP.</td></tr>
+        <tr><td><strong>Google Apps Script</strong> (3 projetos avulsos)</td><td>Recebe os dados via webhook e grava na planilha. Um projeto por aba (Balzani, CBII, Leads Geral) — <strong>propositalmente separados</strong>, não é o mesmo código.</td></tr>
+        <tr><td><strong>Google Sheets</strong></td><td>Planilha "LEADS PRIME 2026" — destino final de tudo.</td></tr>
+        <tr><td><strong>Vercel</strong></td><td>Hospeda o código que roda sozinho: <code>cron-sync</code> (Trello → planilha) e <code>check-emails</code> (e-mail → Trello).</td></tr>
+        <tr><td><strong>cron-job.org</strong></td><td>Serviço externo que "aperta o botão" dos robôs acima, de tempos em tempos, sem ninguém precisar clicar em nada.</td></tr>
+      </table>
+    </section>
+
+    <section id="erros">
+      <h2><span class="num">03</span> Erros comuns e onde olhar primeiro</h2>
+
+      <details open>
+        <summary>Um lead não apareceu na planilha</summary>
+        <div class="details-body">
+          <ol>
+            <li>O card existe no quadro certo do Trello, na lista "LEAD NOVO"? Se não existe lá, o problema é antes do Prime Sync (no e-mail, no Meta Ads, ou em quem cadastrou o card).</li>
+            <li>O card tem um comentário começando com <strong>"⚠️ Falha ao sincronizar"</strong>? Se sim, o sistema já tentou e está te avisando o motivo direto ali no card.</li>
+            <li>Se não tem card nenhum: confira se o <code>check-emails</code> (fluxo Leads Geral) ou o webhook de Meta Ads (fluxo CBII) estão rodando — olha o histórico deles no cron-job.org.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Leads estão duplicando na planilha</summary>
+        <div class="details-body">
+          <p>Quase sempre é um desses dois motivos:</p>
+          <ol>
+            <li>A coluna de "Card ID" (F no Balzani, H no CBII, I no Leads Geral) foi apagada, movida ou está sem valor em algumas linhas — sem ela, o sistema não reconhece "já mandei esse antes".</li>
+            <li>A implantação de algum dos 3 Apps Script está desatualizada ou rodando código errado (veja "Erro clássico" abaixo).</li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Um lead está indo pra planilha errada</summary>
+        <div class="details-body">
+          <p><strong>Erro clássico já visto nesse sistema:</strong> os 3 Apps Script precisam ser projetos completamente separados (avulsos, não vinculados à planilha). Se algum dia forem recriados "de dentro da planilha" (Extensões → Apps Script), eles caem todos no mesmo projeto — e nesse caso só um código vale pra todo mundo, mesmo com URLs diferentes.</p>
+          <p>Teste rápido: abra a URL de cada Apps Script no navegador (sem nada depois do <code>/exec</code>). Cada uma deve responder com o nome certo dela — se a URL do CBII disser "LEADS GERAL ativo", achamos o problema.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>O robô (cron-sync) trava ou dá timeout</summary>
+        <div class="details-body">
+          <p>Normalmente é um card específico enroscado (tenta, falha, tenta de novo pra sempre). O sistema já tenta 2x automaticamente e depois desiste e avisa no próprio card — se ver o mesmo <code>leadId</code> falhando repetidamente no resultado do endpoint, mova esse card manualmente pra fora da lista "LEAD NOVO".</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="protocolo">
+      <h2><span class="num">04</span> Protocolo de emergência</h2>
+      <p class="lead">Se perceber qualquer coisa estranha (duplicidade, leads sumindo, planilha errada), siga essa ordem:</p>
+
+      <div class="card">
+        <ol>
+          <li><strong>Pausa o cron-job "Prime Sync"</strong> no cron-job.org — estanca qualquer sangramento (duplicidade, gravação errada) enquanto você investiga com calma.</li>
+          <li><strong>Testa o endpoint manualmente</strong> no navegador (link na seção de Referência) e lê o JSON — ele te mostra, por quadro: quantos leads encontrou, quantos enviou, quantos já eram duplicados, quantos falharam e por quê.</li>
+          <li><strong>Confere o <code>scriptUrlUsed_last12</code></strong> de cada quadro no resultado — compara com as URLs reais na Referência técnica. Se não bater, o problema é desalinhamento de URL.</li>
+          <li><strong>Testa cada Apps Script isoladamente</strong>, abrindo a URL dele no navegador. Deve responder com o nome certo e a versão mais recente.</li>
+          <li><strong>Se algum estiver com código errado</strong>: abre o projeto certo, confirma o código na tela, Implantar → Gerenciar implantações → lápis ✏️ → Versão: "Nova versão" → Implantar.</li>
+          <li><strong>Só reativa o cron-job</strong> depois de um teste manual limpo (sem <code>failed</code> no resultado).</li>
+        </ol>
+      </div>
+
+      <div class="alert alert-amber">
+        <span>💡</span>
+        <div>Regra geral: <strong>nunca deixe o cron rodando enquanto investiga um problema ativo</strong> — cada ciclo que passa pode empilhar mais erro em cima do erro.</div>
+      </div>
+    </section>
+
+    <section id="fragil">
+      <h2><span class="num">05</span> Pontos mais frágeis do sistema</h2>
+      <p class="lead">Em ordem de risco — o que mais provavelmente vai quebrar algum dia, e por quê.</p>
+
+      <div class="card">
+        <div class="risk-row">
+          <div class="risk-lvl risk-hi">ALTO</div>
+          <div class="risk-txt">
+            <div class="t">Implantação "silenciosa" do Apps Script</div>
+            <div class="d">Editar o código sem clicar em "Nova versão" na implantação simplesmente não tem efeito nenhum — e nada avisa isso. É o bug mais difícil de enxergar. Reforço já aplicado: cada script agora mostra a versão e a data no <code>doGet()</code>, então dá pra confirmar visualmente o que está no ar.</div>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-lvl hi risk-hi">ALTO</div>
+          <div class="risk-txt">
+            <div class="t">Colunas de Card ID sem proteção</div>
+            <div class="d">Se alguém apagar, mover ou renomear a coluna F/H/I na planilha, a deduplicação para de funcionar sem nenhum aviso — e volta a duplicar tudo silenciosamente. Recomendado: proteger essas colunas em Dados → Intervalos protegidos.</div>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-lvl risk-md">MÉDIO</div>
+          <div class="risk-txt">
+            <div class="t">cron-job.org é ponto único de agendamento</div>
+            <div class="d">Se a conta for suspensa, atingir limite do plano gratuito, ou o serviço cair, nada roda mais — sem alerta automático, só percebendo que a planilha parou de crescer.</div>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-lvl risk-md">MÉDIO</div>
+          <div class="risk-txt">
+            <div class="t">Cards presos travando o ciclo</div>
+            <div class="d">Um único card com problema pode consumir tempo do robô a cada execução. Reforço já aplicado: depois de 2 tentativas falhas, o sistema comenta um aviso direto no card do Trello, tornando o problema visível sem precisar ler logs.</div>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-lvl risk-lo">BAIXO</div>
+          <div class="risk-txt">
+            <div class="t">Credenciais fixas no código (hardcoded)</div>
+            <div class="d">Token do Trello, senha de app do Gmail e chaves de API estão escritas direto nos arquivos, por preferência de simplicidade. Se algum dia esse token for revogado ou expirar, os 3 fluxos param ao mesmo tempo — esse é o primeiro lugar a suspeitar se tudo parar de uma vez só.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lembretes">
+      <h2><span class="num">06</span> Lembretes de manutenção futura</h2>
+      <div class="card">
+        <ul>
+          <li><strong>Token do Trello</strong> — não tem data de expiração fixa, mas pode ser revogado manualmente nas configurações da conta Trello. Se tudo parar de uma vez, é o primeiro suspeito.</li>
+          <li><strong>Senha de app do Gmail</strong> (leadsprimecanalpro@gmail.com) — pode parar de funcionar se a senha da conta mudar, o 2FA for reconfigurado, ou o Google revogar acesso de apps menos seguros. Afeta só o fluxo "Leads Geral" (e-mails).</li>
+          <li><strong>Autorização do Google Apps Script</strong> — o Google eventualmente pode pedir reautorização (principalmente após mudanças de escopo ou longos períodos de inatividade). Se um dos 3 scripts parar de responder do nada, verificar isso primeiro.</li>
+          <li><strong>Limites do plano gratuito (cron-job.org e Vercel)</strong> — se o volume de leads crescer muito, os dois podem precisar de upgrade de plano (mais frequência de execução, mais tempo de função).</li>
+          <li><strong>Segredo do endpoint (<code>CRON_SECRET</code>)</strong> — está fixo no código. Se esse arquivo algum dia for compartilhado publicamente ou for parar num repositório aberto, o segredo precisa ser trocado.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="referencia">
+      <h2><span class="num">07</span> Referência técnica</h2>
+      <div class="alert alert-red">
+        <span>🔒</span>
+        <div>Essa seção tem credenciais reais. <strong>Não compartilhe esse link publicamente.</strong></div>
+      </div>
+
+      <table>
+        <tr><th>Item</th><th>Valor</th></tr>
+        <tr><td>Planilha "LEADS PRIME 2026"</td><td class="mono-cell">15Hh_YVbQN-RlBBoYItjwUHCPyMdWmUhOXBnxGJstrI0</td></tr>
+        <tr><td>Endpoint de sincronização</td><td class="mono-cell">import-trello-leads.vercel.app/api/cron-sync?secret=Tg5_buQbkFeMPn05MUCvEtUVP2KyweJo</td></tr>
+        <tr><td>Board Balzani</td><td class="mono-cell">0ERCXChY · lista LEAD NOVO: 69d909fa3a907679b3c12295</td></tr>
+        <tr><td>Board CBII</td><td class="mono-cell">6a723e5ac2393c5abb4f7a0f · lista LEAD NOVO: 6a723e6c4e671cc5ca104614</td></tr>
+        <tr><td>Board Leads Geral</td><td class="mono-cell">818YF3D6 · lista LEAD NOVO: 6a7b0e12be5ebebf1e2c8c81</td></tr>
+        <tr><td>Apps Script — Balzani</td><td class="mono-cell">…hXTyoK9/exec</td></tr>
+        <tr><td>Apps Script — CBII</td><td class="mono-cell">…CuZwtvA/exec</td></tr>
+        <tr><td>Apps Script — Leads Geral</td><td class="mono-cell">…BRoDqT2/exec</td></tr>
+      </table>
+
+      <p>URLs completas, tokens e chaves ficam no código-fonte dos projetos <code>import-trello-leads</code> (Vercel) e nos 3 projetos avulsos do Apps Script — essa tabela é só pra identificação rápida, não substitui olhar o código quando precisar do valor completo.</p>
+    </section>
+
+    <div class="footer-note">Prime Sync — documentação interna. Gerada e mantida junto com o sistema; atualize essa página sempre que algo estrutural mudar.</div>
+
+  </main>
+</div>
+</body>
+</html>

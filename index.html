@@ -36,10 +36,11 @@ body::before {
     radial-gradient(ellipse 60% 40% at 10% 10%, rgba(195,53,57,.05) 0%, transparent 60%),
     radial-gradient(ellipse 50% 50% at 90% 90%, rgba(26,107,181,.04) 0%, transparent 60%);
 }
-.wrap { max-width: 560px; margin: 0 auto; position: relative; z-index: 1; }
+.wrap { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; }
+.wrap-narrow { max-width: 560px; margin: 0 auto 1.4rem; position: relative; z-index: 1; }
 
 /* ─── HEADER ─── */
-.hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; animation: up .45s ease both; }
+.hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6rem; animation: up .45s ease both; }
 .hd-left { display: flex; align-items: center; gap: 12px; }
 .logo-box {
   width: 38px; height: 38px; border-radius: 11px;
@@ -47,7 +48,6 @@ body::before {
   box-shadow: 0 2px 10px rgba(195,53,57,.35);
 }
 .logo-box svg { width: 19px; height: 19px; }
-.hd-text {}
 .hd-name { font-size: 15px; font-weight: 600; letter-spacing: -.02em; line-height: 1; }
 .hd-sub { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
 .conn-pill {
@@ -65,9 +65,7 @@ body::before {
   box-shadow: var(--sh); margin-bottom: 1rem;
   animation: up .45s ease both;
 }
-.card:nth-child(2) { animation-delay: .05s; }
-.card:nth-child(3) { animation-delay: .1s; }
-.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; flex-wrap:wrap; gap:6px; }
 .card-label { font-size: 10.5px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
 .card-toggle { font-size: 12px; color: var(--red); cursor: pointer; font-weight: 500; user-select: none; }
 .card-toggle:hover { opacity: .75; }
@@ -109,6 +107,13 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .btn-warn { background: transparent; color: #92400e; border: 1px solid #fbbf24; }
 .btn-warn:hover { background: #fffbeb; border-color: #f59e0b; }
 .btn-warn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-onlight { background: rgba(255,255,255,.16); color: #fff; box-shadow: none; }
+.btn-onlight:hover:not(:disabled) { background: rgba(255,255,255,.26); }
+.btn-ghost-onlight { background: transparent; color: rgba(255,255,255,.9); border: 1px solid rgba(255,255,255,.35); }
+.btn-ghost-onlight:hover { background: rgba(255,255,255,.12); }
+.btn-warn-onlight { background: transparent; color: #fff3cd; border: 1px solid rgba(255,224,130,.55); }
+.btn-warn-onlight:hover { background: rgba(255,224,130,.12); }
+.btn-topbar { display:block; margin: 0 auto 1.4rem; }
 
 /* Modal */
 .modal-overlay {
@@ -133,7 +138,6 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .modal-body { font-size: 13px; color: var(--text2); line-height: 1.55; margin-bottom: 1.25rem; }
 .modal-body strong { color: var(--text); font-weight: 600; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
 
 /* ─── STATUS ─── */
 .status {
@@ -152,6 +156,12 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .dot-r { background: var(--red); }
 .dot-k { background: var(--text3); }
 
+/* status on colored cards */
+.sync-card .status.loading { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.25); }
+.sync-card .status.success { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.25); }
+.sync-card .status.error   { background: rgba(255,255,255,.22); color: #fff; border-color: rgba(255,255,255,.3); }
+.sync-card .status.idle    { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.2); }
+
 /* ─── STATS ─── */
 .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.1rem; }
 .stat { background: var(--surface2); border-radius: 10px; padding: 13px 10px; text-align: center; border: 1px solid var(--border); }
@@ -161,7 +171,7 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .stat-l { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
 
 /* ─── LEADS ─── */
-.leads { display: flex; flex-direction: column; gap: 7px; margin-top: 13px; }
+.leads { display: flex; flex-direction: column; gap: 7px; margin-top: 13px; max-height: 420px; overflow-y: auto; }
 .lead {
   display: flex; align-items: center; gap: 11px;
   background: var(--surface2); border: 1px solid var(--border);
@@ -184,6 +194,7 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .l-name { font-size: 13px; font-weight: 600; }
 .l-phone { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text2); margin-top: 2px; }
 .l-sent { font-size: 11px; color: var(--green); margin-top: 2px; font-weight: 500; }
+.l-meta { font-size: 11px; color: var(--text3); margin-top: 1px; }
 .badge {
   font-size: 10.5px; padding: 3px 9px; border-radius: 99px;
   font-weight: 600; flex-shrink: 0; letter-spacing: .01em;
@@ -192,7 +203,6 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 .bg-a { background: #d1fae5; color: #064e3b; border: 1px solid rgba(16,185,129,.2); }
 .bg-b { background: #fef3c7; color: #78350f; border: 1px solid rgba(217,119,6,.2); }
 .bg-o { background: #f1efec; color: #57534e; border: 1px solid var(--border); }
-/* Novos empreendimentos */
 .av-blc { background: #fce7f3; color: #831843; }
 .av-rr  { background: #e0f2fe; color: #0c4a6e; }
 .av-cac { background: #f0fdf4; color: #14532d; }
@@ -204,9 +214,33 @@ input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; fo
 
 .empty { text-align: center; padding: 2.2rem 0; color: var(--text3); font-size: 13px; }
 .empty-i { font-size: 30px; margin-bottom: 8px; }
+.sync-card .empty { color: rgba(255,255,255,.65); }
 
 hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
 .footer { text-align: center; margin-top: 2rem; font-size: 11px; color: var(--text3); letter-spacing: .02em; animation: up .45s .2s ease both; }
+
+/* ─── GRID DE SINCRONIZAÇÃO ─── */
+.sync-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: start; }
+@media (max-width: 980px) { .sync-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .sync-grid { grid-template-columns: 1fr; } }
+
+.sync-card { color: #fff; }
+.sync-card .card-label { color: rgba(255,255,255,.72); }
+.sync-card .stat { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); }
+.sync-card .stat-n { color: #fff; }
+.sync-card .stat-n.g { color: #baf7dd; }
+.sync-card .stat-n.r { color: #ffd7d7; }
+.sync-card .stat-l { color: rgba(255,255,255,.6); }
+.sync-card .lead { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.16); }
+.sync-card .lead:hover { background: rgba(255,255,255,.16); }
+.sync-card .lead.sent { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.4); }
+.sync-card .l-phone { color: rgba(255,255,255,.75); }
+.sync-card .l-meta { color: rgba(255,255,255,.6); }
+.sync-card .l-sent { color: #baf7dd; }
+
+.card-balzani { background: var(--red); }
+.card-cbii { background: #267d0e; }
+.card-prime { background: #3b2e7a; }
 
 @keyframes up { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -214,8 +248,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
 </style>
 </head>
 <body>
-<div class="wrap">
-
+<div class="wrap-narrow">
   <!-- Header -->
   <div class="hd">
     <div class="hd-left">
@@ -240,7 +273,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
     </div>
     <div id="cfgBody">
       <div class="field">
-        <label>API Key do Trello</label>
+        <label>API Key do Trello (compartilhada entre os 3 quadros)</label>
         <div class="inp-wrap">
           <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           <input type="text" id="apiKey" placeholder="Chave de API" />
@@ -253,11 +286,26 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
           <input type="password" id="apiToken" placeholder="Token de acesso" />
         </div>
       </div>
+      <hr>
       <div class="field">
-        <label>URL do Google Apps Script</label>
+        <label>URL do Apps Script — Balzani</label>
         <div class="inp-wrap">
           <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          <input type="text" id="scriptUrl" placeholder="https://script.google.com/..." />
+          <input type="text" id="scriptUrlBalzani" placeholder="https://script.google.com/..." />
+        </div>
+      </div>
+      <div class="field">
+        <label>URL do Apps Script — CBII</label>
+        <div class="inp-wrap">
+          <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <input type="text" id="scriptUrlCbii" placeholder="https://script.google.com/..." />
+        </div>
+      </div>
+      <div class="field">
+        <label>URL do Apps Script — Leads Geral</label>
+        <div class="inp-wrap">
+          <svg class="inp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <input type="text" id="scriptUrlPrime" placeholder="https://script.google.com/..." />
         </div>
       </div>
       <div class="btn-row">
@@ -270,33 +318,67 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
       <div id="connStatus" class="status"></div>
     </div>
   </div>
+</div>
 
-  <!-- Sync card -->
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Leads — LEAD NOVO</span>
+<div class="wrap">
+  <button class="btn btn-red btn-topbar" id="btnSyncAll" onclick="syncAll()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+    Sincronizar tudo
+  </button>
+
+  <div class="sync-grid">
+
+    <!-- Card Balzani -->
+    <div class="card sync-card card-balzani">
+      <div class="card-top"><span class="card-label">Balzani — LEAD NOVO</span></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="sTotalBalzani">—</div><div class="stat-l">Encontrados</div></div>
+        <div class="stat"><div class="stat-n g" id="sSentBalzani">—</div><div class="stat-l">Enviados</div></div>
+        <div class="stat"><div class="stat-n r" id="sFailBalzani">—</div><div class="stat-l">Falhas</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-onlight" onclick="syncBoard('balzani')">Buscar e enviar</button>
+        <button class="btn btn-ghost-onlight" onclick="previewBoard('balzani')">Só visualizar</button>
+        <button class="btn btn-warn-onlight" onclick="confirmResend('balzani')">Reenviar tudo</button>
+      </div>
+      <div id="syncStatusBalzani" class="status"></div>
+      <div id="leadsListBalzani"></div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="stat-n" id="sTotal">—</div><div class="stat-l">Encontrados</div></div>
-      <div class="stat"><div class="stat-n g" id="sSent">—</div><div class="stat-l">Enviados</div></div>
-      <div class="stat"><div class="stat-n r" id="sFail">—</div><div class="stat-l">Falhas</div></div>
+
+    <!-- Card CBII -->
+    <div class="card sync-card card-cbii">
+      <div class="card-top"><span class="card-label">CBII — LEAD NOVO</span></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="sTotalCbii">—</div><div class="stat-l">Encontrados</div></div>
+        <div class="stat"><div class="stat-n g" id="sSentCbii">—</div><div class="stat-l">Enviados</div></div>
+        <div class="stat"><div class="stat-n r" id="sFailCbii">—</div><div class="stat-l">Falhas</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-onlight" onclick="syncBoard('cbii')">Buscar e enviar</button>
+        <button class="btn btn-ghost-onlight" onclick="previewBoard('cbii')">Só visualizar</button>
+        <button class="btn btn-warn-onlight" onclick="confirmResend('cbii')">Reenviar tudo</button>
+      </div>
+      <div id="syncStatusCbii" class="status"></div>
+      <div id="leadsListCbii"></div>
     </div>
-    <div class="btn-row" style="margin-top:0">
-      <button class="btn btn-red" id="btnSync" onclick="syncLeads()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-        Buscar e enviar
-      </button>
-      <button class="btn btn-ghost" onclick="preview()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Só visualizar
-      </button>
-      <button class="btn btn-warn" id="btnResend" onclick="confirmResend()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>
-        Reenviar tudo
-      </button>
+
+    <!-- Card Leads Geral (CRM Leads Prime) -->
+    <div class="card sync-card card-prime">
+      <div class="card-top"><span class="card-label">Leads Geral — LEAD NOVO</span></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="sTotalPrime">—</div><div class="stat-l">Encontrados</div></div>
+        <div class="stat"><div class="stat-n g" id="sSentPrime">—</div><div class="stat-l">Enviados</div></div>
+        <div class="stat"><div class="stat-n r" id="sFailPrime">—</div><div class="stat-l">Falhas</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-onlight" onclick="syncBoard('prime')">Buscar e enviar</button>
+        <button class="btn btn-ghost-onlight" onclick="previewBoard('prime')">Só visualizar</button>
+        <button class="btn btn-warn-onlight" onclick="confirmResend('prime')">Reenviar tudo</button>
+      </div>
+      <div id="syncStatusPrime" class="status"></div>
+      <div id="leadsListPrime"></div>
     </div>
-    <div id="syncStatus" class="status"></div>
-    <div id="leadsList"></div>
+
   </div>
 
   <div class="footer">Prime Empreendimentos &nbsp;·&nbsp; Sincronização de Leads</div>
@@ -309,7 +391,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>
     </div>
     <div class="modal-title">Reenviar todos os leads?</div>
-    <div class="modal-body">
+    <div class="modal-body" id="resendModalBody">
       Isso vai <strong>limpar o histórico de envios</strong> e reenviar <strong>todos os leads</strong> da lista "LEAD NOVO" para a planilha — incluindo os que já foram enviados antes.<br><br>
       Use isso apenas se sua planilha estava com filtro ativo e os leads não foram registrados.
     </div>
@@ -325,18 +407,49 @@ hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
 const DEFAULTS = {
   apiKey:    '97afcc00de05c98554fc78eeee132d0a',
   apiToken:  'ATTAda0170c83e12dfe5aa231df3ffdacc1f0491a3b18ca0f02bef6366459c08f3d20572412F',
-  scriptUrl: 'https://script.google.com/macros/s/AKfycbzosxQD7MKpzDtDFGxx8x8OhXhgXZSm05trtZbJCXCeiFcHQBVaShwJeT0FWJ5OVr2HuA/exec'
+  scriptUrlBalzani: 'https://script.google.com/macros/s/AKfycbx2-UVscCVQSSUxW3295V5oDiEaKX1Bvj3rOJkUIf-u1YkqZHS0zzUtwbiQ4hXTyoK9/exec',
+  scriptUrlCbii:    'https://script.google.com/macros/s/AKfycbyx57S0nGXwt9TPhKuujKlmQT2B0Qelz1AQxy76molmoZ3-tqUdS-SYG_dfQ4nCuZwtvA/exec',
+  scriptUrlPrime:   'https://script.google.com/macros/s/AKfycbyIMEtQoXS7NKIT22X9eWfM07leL95oLtHZYcshfrYTi9hiNCziXu4QoJl79BRoDqT2/exec'
 };
 // ───────────────────────────────────────────────────────────────────────────
 
-const BOARD = '0ERCXChY';
-let leads = [], sent = new Set(), cfgOpen = true;
+// ─── CONFIG DOS 3 QUADROS ───────────────────────────────────────────────────
+const BOARDS = {
+  balzani: {
+    board: '0ERCXChY',
+    scriptField: 'scriptUrlBalzani',
+    parse: parseStandard,
+    payload: l => ({ nome: l.firstName, loteamento: l.code, telefone: l.phone, cardId: l.id })
+  },
+  cbii: {
+    board: '6a723e5ac2393c5abb4f7a0f',
+    scriptField: 'scriptUrlCbii',
+    parse: parseStandard,
+    payload: l => ({ nome: l.firstName, loteamento: 'CBII', telefone: l.phone, origem: 'Facebook PT', cardId: l.id })
+  },
+  prime: {
+    board: '818YF3D6',
+    scriptField: 'scriptUrlPrime',
+    parse: parsePrime,
+    payload: l => ({ nome: l.firstName, interesse: l.code, telefone: l.phone, origem: l.origem, cardId: l.id })
+  }
+};
+
+const state = {
+  balzani: { leads: [], sent: new Set() },
+  cbii:    { leads: [], sent: new Set() },
+  prime:   { leads: [], sent: new Set() }
+};
 
 function vals() {
   return {
     k: document.getElementById('apiKey').value.trim(),
     t: document.getElementById('apiToken').value.trim(),
-    s: document.getElementById('scriptUrl').value.trim()
+    s: {
+      balzani: document.getElementById('scriptUrlBalzani').value.trim(),
+      cbii:    document.getElementById('scriptUrlCbii').value.trim(),
+      prime:   document.getElementById('scriptUrlPrime').value.trim()
+    }
   };
 }
 
@@ -344,17 +457,21 @@ function init() {
   try {
     const saved = localStorage.getItem('prime_cfg');
     const cfg = saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
-    document.getElementById('apiKey').value    = cfg.apiKey    || '';
-    document.getElementById('apiToken').value  = cfg.apiToken  || '';
-    document.getElementById('scriptUrl').value = cfg.scriptUrl || '';
-    const s = localStorage.getItem('prime_sent');
-    if (s) sent = new Set(JSON.parse(s));
+    document.getElementById('apiKey').value          = cfg.apiKey          || '';
+    document.getElementById('apiToken').value        = cfg.apiToken        || '';
+    document.getElementById('scriptUrlBalzani').value= cfg.scriptUrlBalzani|| '';
+    document.getElementById('scriptUrlCbii').value   = cfg.scriptUrlCbii   || '';
+    document.getElementById('scriptUrlPrime').value  = cfg.scriptUrlPrime  || '';
+    ['balzani','cbii','prime'].forEach(id => {
+      const s = localStorage.getItem('prime_sent_' + id);
+      if (s) state[id].sent = new Set(JSON.parse(s));
+    });
     markOk();
   } catch(e) {}
 }
 
 function markOk() {
-  ['apiKey','apiToken','scriptUrl'].forEach(id => {
+  ['apiKey','apiToken','scriptUrlBalzani','scriptUrlCbii','scriptUrlPrime'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('ok', !!el.value.trim());
   });
@@ -362,15 +479,22 @@ function markOk() {
 
 function saveCfg() {
   const v = vals();
-  try { localStorage.setItem('prime_cfg', JSON.stringify({ apiKey: v.k, apiToken: v.t, scriptUrl: v.s })); } catch(e) {}
+  try {
+    localStorage.setItem('prime_cfg', JSON.stringify({
+      apiKey: v.k, apiToken: v.t,
+      scriptUrlBalzani: v.s.balzani, scriptUrlCbii: v.s.cbii, scriptUrlPrime: v.s.prime
+    }));
+  } catch(e) {}
   markOk();
   st('connStatus', 'Configuração salva no navegador.', 'idle');
 }
 
 function toggleConfig() {
-  cfgOpen = !cfgOpen;
-  document.getElementById('cfgBody').style.display = cfgOpen ? '' : 'none';
-  document.getElementById('toggleBtn').textContent = cfgOpen ? 'ocultar ↑' : 'mostrar ↓';
+  const body = document.getElementById('cfgBody');
+  const btn = document.getElementById('toggleBtn');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  btn.textContent = open ? 'mostrar ↓' : 'ocultar ↑';
 }
 
 function st(id, msg, type) {
@@ -385,10 +509,10 @@ async function testConn() {
   if (!k || !t) { st('connStatus','Preencha API Key e Token.','error'); return; }
   st('connStatus','Conectando ao Trello...','loading');
   try {
-    const r = await fetch(`https://api.trello.com/1/boards/${BOARD}?key=${k}&token=${t}`);
+    const r = await fetch(`https://api.trello.com/1/members/me?key=${k}&token=${t}`);
     if (!r.ok) throw new Error(`Erro ${r.status}`);
     const d = await r.json();
-    st('connStatus', `Conectado: ${d.name}`, 'success');
+    st('connStatus', `Conectado como: ${d.fullName || d.username}`, 'success');
     document.getElementById('connPill').classList.add('on');
   } catch(e) {
     st('connStatus', `Erro: ${e.message}`, 'error');
@@ -396,8 +520,8 @@ async function testConn() {
   }
 }
 
-async function listId(k, t) {
-  const r = await fetch(`https://api.trello.com/1/boards/${BOARD}/lists?key=${k}&token=${t}`);
+async function listId(boardId, k, t) {
+  const r = await fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${k}&token=${t}`);
   if (!r.ok) throw new Error('Erro ao buscar listas.');
   const ls = await r.json();
   const f = ls.find(l => l.name.toUpperCase().includes('LEAD NOVO'));
@@ -406,7 +530,7 @@ async function listId(k, t) {
 }
 
 async function getCards(lid, k, t) {
-  const r = await fetch(`https://api.trello.com/1/lists/${lid}/cards?key=${k}&token=${t}`);
+  const r = await fetch(`https://api.trello.com/1/lists/${lid}/cards?key=${k}&token=${t}&fields=name,desc,labels`);
   if (!r.ok) throw new Error('Erro ao buscar cards.');
   return r.json();
 }
@@ -427,9 +551,7 @@ const EMPREENDIMENTOS = [
 // ────────────────────────────────────────────────────────────────────────────
 
 function detectLot(text) {
-  const hay = text.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos para matching
-    ;
+  const hay = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const hayOrig = text.toLowerCase();
   for (const emp of EMPREENDIMENTOS) {
     for (const term of emp.match) {
@@ -440,119 +562,213 @@ function detectLot(text) {
   return { label: 'Outro', code: 'OUTRO' };
 }
 
-function parse(card) {
-  const raw = card.name || '';
-  const firstName = raw.split(/[\s|–\-]/)[0].replace(/[^\wÀ-ú]/g, '').trim() || raw.slice(0, 10);
-  const haystack = raw + ' ' + (card.desc || '');
-  const emp = detectLot(haystack);
-  let phone = '';
+function formatPhone(n) {
+  if (n.length === 11)      return `(${n.slice(0,2)}) ${n[2]}${n.slice(3,7)}-${n.slice(7)}`;
+  else if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return n;
+}
+
+function extractPhone(card) {
   for (const line of (card.desc || '').split('\n')) {
     const up = line.toUpperCase();
-    if (up.includes('WHATSAPP:') && !up.includes('DIRETO')) {
+    if ((up.includes('WHATSAPP:') || up.includes('TELEFONE:') || up.includes('FONE:') || up.includes('CELULAR:')) && !up.includes('DIRETO')) {
       const n = line.replace(/[^0-9]/g, '').replace(/^55/, '');
-      if (n.length === 11)      phone = `(${n.slice(0,2)}) ${n[2]}${n.slice(3,7)}-${n.slice(7)}`;
-      else if (n.length === 10) phone = `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
-      else phone = n;
-      break;
+      if (n) return formatPhone(n);
     }
   }
+  // fallback: procura um padrão de telefone solto no título ou na descrição
+  const hay = (card.name || '') + ' ' + (card.desc || '');
+  const m = hay.match(/\(?\d{2}\)?\s?9?\d{4}-?\d{4}/);
+  if (m) {
+    const n = m[0].replace(/[^0-9]/g, '').replace(/^55/, '');
+    return formatPhone(n);
+  }
+  return '';
+}
+
+// ─── ORIGEM (canal do lead) — usado só pelo quadro Leads Geral ────────────
+const ORIGEM_MAP = {
+  'canal pro': 'Canal Pro',
+  'chaves na mao': 'Chaves na Mão',
+  'olx': 'OLX',
+  'viva real': 'Viva Real',
+  'zap': 'Zap Imóveis',
+  'zap imoveis': 'Zap Imóveis',
+  'whatsapp': 'WhatsApp',
+  'facebook': 'Facebook',
+  'instagram': 'Instagram',
+  'chat bot': 'Chat Bot',
+  'chatbot': 'Chat Bot',
+  'site': 'Site',
+  'indicacao': 'Indicação'
+};
+function norm(s) { return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+function detectOrigem(card) {
+  if (card.labels && card.labels.length) {
+    const raw = card.labels[0].name || '';
+    const key = norm(raw);
+    if (ORIGEM_MAP[key]) return ORIGEM_MAP[key];
+    if (raw.trim()) return raw.trim();
+  }
+  const hay = norm((card.name || '') + ' ' + (card.desc || ''));
+  for (const k in ORIGEM_MAP) { if (hay.includes(k)) return ORIGEM_MAP[k]; }
+  return 'Outro';
+}
+
+function firstNameOf(card) {
+  const raw = card.name || '';
+  return raw.split(/[\s|–\-]/)[0].replace(/[^\wÀ-ú]/g, '').trim() || raw.slice(0, 10);
+}
+
+// Parser padrão (Balzani / CBII)
+function parseStandard(card) {
+  const firstName = firstNameOf(card);
+  const haystack = (card.name || '') + ' ' + (card.desc || '');
+  const emp = detectLot(haystack);
+  const phone = extractPhone(card);
   return { id: card.id, firstName, lot: emp.label, code: emp.code, phone };
 }
 
-const AV_CLASSES = {
-  'MVE':'av-m', 'AV':'av-a', 'BI':'av-b', 'BLC':'av-blc',
-  'RR':'av-rr', 'CAC':'av-cac', 'VM1':'av-vm1'
-};
-const BG_CLASSES = {
-  'MVE':'bg-m', 'AV':'bg-a', 'BI':'bg-b', 'BLC':'bg-blc',
-  'RR':'bg-rr', 'CAC':'bg-cac', 'VM1':'bg-vm1'
-};
+// O quadro "Leads Geral" costuma trazer uma linha explícita "Empreendimento: XX"
+// na descrição (sigla, não nome completo) — lemos ela direto em vez de tentar
+// achar o nome por extenso no texto.
+function extractEmpCode(card) {
+  for (const line of (card.desc || '').split('\n')) {
+    const m = line.match(/^\s*empreendimento\s*:\s*(.+)$/i);
+    if (m) return m[1].trim();
+  }
+  return '';
+}
+
+function detectLotForPrime(card) {
+  const raw = extractEmpCode(card);
+  if (raw) {
+    const rawUp = raw.toUpperCase();
+    const found = EMPREENDIMENTOS.find(e => e.code.toUpperCase() === rawUp);
+    if (found) return found;
+    // Sigla ainda não cadastrada na lista — usa o texto exato do card em vez
+    // de forçar "Outro", assim nada some da planilha por falta de mapeamento.
+    return { label: raw, code: rawUp };
+  }
+  // Sem campo "Empreendimento:" explícito — cai no detector por palavra-chave
+  // no título/descrição (mesmo comportamento do Balzani/CBII).
+  const haystack = (card.name || '') + ' ' + (card.desc || '');
+  return detectLot(haystack);
+}
+
+// Parser do quadro Leads Geral (detecta também a origem/canal)
+function parsePrime(card) {
+  const firstName = firstNameOf(card);
+  const emp = detectLotForPrime(card);
+  const phone = extractPhone(card);
+  const origem = detectOrigem(card);
+  return { id: card.id, firstName, lot: emp.label, code: emp.code, phone, origem };
+}
+
+const AV_CLASSES = { 'MVE':'av-m', 'AV':'av-a', 'BI':'av-b', 'BLC':'av-blc', 'RR':'av-rr', 'CAC':'av-cac', 'VM1':'av-vm1' };
+const BG_CLASSES = { 'MVE':'bg-m', 'AV':'bg-a', 'BI':'bg-b', 'BLC':'bg-blc', 'RR':'bg-rr', 'CAC':'bg-cac', 'VM1':'bg-vm1' };
 function avClass(code) { return AV_CLASSES[code] || 'av-o'; }
 function bgClass(code)  { return BG_CLASSES[code] || 'bg-o'; }
 
-function render(arr) {
-  const el = document.getElementById('leadsList');
+function render(id, arr) {
+  const suffix = { balzani:'Balzani', cbii:'Cbii', prime:'Prime' }[id];
+  const el = document.getElementById('leadsList' + suffix);
   if (!arr.length) { el.innerHTML = '<div class="empty"><div class="empty-i">📭</div>Nenhum lead encontrado na lista.</div>'; return; }
   el.innerHTML = '<div class="leads">' + arr.map((l, i) => `
-    <div class="lead${sent.has(l.id)?' sent':''}" style="animation-delay:${i*.04}s">
+    <div class="lead${state[id].sent.has(l.id)?' sent':''}" style="animation-delay:${i*.04}s">
       <div class="av ${avClass(l.code)}">${l.firstName.slice(0,2).toUpperCase()}</div>
       <div class="l-info">
         <div class="l-name">${l.firstName}</div>
-        <div class="l-phone">${l.phone||'<span style="color:var(--text3);font-size:11px">sem telefone</span>'}</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:1px">${l.lot}</div>
-        ${sent.has(l.id)?'<div class="l-sent">✓ enviado para a planilha</div>':''}
+        <div class="l-phone">${l.phone||'<span style="opacity:.6;font-size:11px">sem telefone</span>'}</div>
+        <div class="l-meta">${l.lot}${l.origem ? ' · ' + l.origem : ''}</div>
+        ${state[id].sent.has(l.id)?'<div class="l-sent">✓ enviado para a planilha</div>':''}
       </div>
       <span class="badge ${bgClass(l.code)}" title="${l.lot}">${l.code}</span>
     </div>`).join('') + '</div>';
 }
 
-function upStats(total, s, f) {
-  document.getElementById('sTotal').textContent = total ?? '—';
-  document.getElementById('sSent').textContent  = s     ?? '—';
-  document.getElementById('sFail').textContent  = f     ?? '—';
+function upStats(id, total, s, f) {
+  const suffix = { balzani:'Balzani', cbii:'Cbii', prime:'Prime' }[id];
+  document.getElementById('sTotal'+suffix).textContent = total ?? '—';
+  document.getElementById('sSent'+suffix).textContent  = s     ?? '—';
+  document.getElementById('sFail'+suffix).textContent  = f     ?? '—';
 }
 
-async function preview() {
+async function previewBoard(id) {
   const { k, t } = vals();
-  if (!k || !t) { st('syncStatus','Configure as credenciais primeiro.','error'); return; }
-  st('syncStatus','Buscando leads em "LEAD NOVO"...','loading');
+  const suffix = { balzani:'Balzani', cbii:'Cbii', prime:'Prime' }[id];
+  const statusId = 'syncStatus' + suffix;
+  if (!k || !t) { st(statusId,'Configure as credenciais primeiro.','error'); return; }
+  st(statusId,'Buscando leads em "LEAD NOVO"...','loading');
   try {
-    const lid = await listId(k, t);
+    const cfg = BOARDS[id];
+    const lid = await listId(cfg.board, k, t);
     const cards = await getCards(lid, k, t);
-    leads = cards.map(parse);
-    upStats(leads.length, leads.filter(l => sent.has(l.id)).length, '—');
-    render(leads);
-    st('syncStatus', `${leads.length} lead(s) encontrado(s). Clique em "Buscar e enviar" para cadastrar.`, 'success');
+    state[id].leads = cards.map(cfg.parse);
+    upStats(id, state[id].leads.length, state[id].leads.filter(l => state[id].sent.has(l.id)).length, '—');
+    render(id, state[id].leads);
+    st(statusId, `${state[id].leads.length} lead(s) encontrado(s). Clique em "Buscar e enviar" para cadastrar.`, 'success');
     document.getElementById('connPill').classList.add('on');
-  } catch(e) { st('syncStatus', `Erro: ${e.message}`, 'error'); }
+  } catch(e) { st(statusId, `Erro: ${e.message}`, 'error'); }
 }
 
-async function syncLeads() {
+async function syncBoard(id) {
   const { k, t, s } = vals();
-  if (!k || !t) { st('syncStatus','Configure as credenciais primeiro.','error'); return; }
-  if (!s)       { st('syncStatus','Informe a URL do Google Apps Script.','error'); return; }
-  const btn = document.getElementById('btnSync');
-  btn.disabled = true;
-  st('syncStatus','Buscando leads no Trello...','loading');
+  const cfg = BOARDS[id];
+  const suffix = { balzani:'Balzani', cbii:'Cbii', prime:'Prime' }[id];
+  const statusId = 'syncStatus' + suffix;
+  const scriptUrl = s[id];
+  if (!k || !t) { st(statusId,'Configure as credenciais primeiro.','error'); return; }
+  if (!scriptUrl) { st(statusId,'Informe a URL do Google Apps Script deste quadro.','error'); return; }
+  st(statusId,'Buscando leads no Trello...','loading');
   try {
-    const lid = await listId(k, t);
+    const lid = await listId(cfg.board, k, t);
     const cards = await getCards(lid, k, t);
-    leads = cards.map(parse);
-    const toSend = leads.filter(l => !sent.has(l.id));
+    state[id].leads = cards.map(cfg.parse);
+    const toSend = state[id].leads.filter(l => !state[id].sent.has(l.id));
 
     if (!toSend.length) {
-      upStats(leads.length, leads.filter(l=>sent.has(l.id)).length, 0);
-      render(leads);
-      st('syncStatus','Todos os leads já foram enviados anteriormente.','success');
-      btn.disabled = false;
+      upStats(id, state[id].leads.length, state[id].leads.filter(l=>state[id].sent.has(l.id)).length, 0);
+      render(id, state[id].leads);
+      st(statusId,'Todos os leads já foram enviados anteriormente.','success');
       return;
     }
 
-    st('syncStatus', `Enviando ${toSend.length} lead(s) para o Google Sheets...`, 'loading');
+    st(statusId, `Enviando ${toSend.length} lead(s) para o Google Sheets...`, 'loading');
     let ok = 0, fail = 0;
     for (const lead of toSend) {
       try {
-        await fetch(s, {
+        await fetch(scriptUrl, {
           method: 'POST', mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome: lead.firstName, loteamento: lead.code, telefone: lead.phone, cardId: lead.id })
+          body: JSON.stringify(cfg.payload(lead))
         });
-        sent.add(lead.id);
+        state[id].sent.add(lead.id);
         ok++;
       } catch(e) { fail++; }
     }
-    try { localStorage.setItem('prime_sent', JSON.stringify([...sent])); } catch(e) {}
-    upStats(leads.length, leads.filter(l=>sent.has(l.id)).length, fail);
-    render(leads);
-    st('syncStatus', fail ? `${ok} enviado(s) · ${fail} falha(s)` : `${ok} lead(s) enviado(s) com sucesso.`, fail ? 'error' : 'success');
+    try { localStorage.setItem('prime_sent_' + id, JSON.stringify([...state[id].sent])); } catch(e) {}
+    upStats(id, state[id].leads.length, state[id].leads.filter(l=>state[id].sent.has(l.id)).length, fail);
+    render(id, state[id].leads);
+    st(statusId, fail ? `${ok} enviado(s) · ${fail} falha(s)` : `${ok} lead(s) enviado(s) com sucesso.`, fail ? 'error' : 'success');
     document.getElementById('connPill').classList.add('on');
   } catch(e) {
-    st('syncStatus', `Erro: ${e.message}`, 'error');
+    st(statusId, `Erro: ${e.message}`, 'error');
   }
+}
+
+async function syncAll() {
+  const btn = document.getElementById('btnSyncAll');
+  btn.disabled = true;
+  await syncBoard('balzani');
+  await syncBoard('cbii');
+  await syncBoard('prime');
   btn.disabled = false;
 }
 
-function confirmResend() {
+let resendTarget = null;
+function confirmResend(id) {
+  resendTarget = id;
   document.getElementById('resendModal').classList.add('open');
 }
 function closeModal() {
@@ -562,14 +778,19 @@ function closeModalOutside(e) {
   if (e.target === document.getElementById('resendModal')) closeModal();
 }
 async function resendAll() {
+  const id = resendTarget;
   closeModal();
-  sent.clear();
-  try { localStorage.removeItem('prime_sent'); } catch(e) {}
-  await syncLeads();
+  if (!id) return;
+  state[id].sent.clear();
+  try { localStorage.removeItem('prime_sent_' + id); } catch(e) {}
+  await syncBoard(id);
+  resendTarget = null;
 }
 
 init();
-['apiKey','apiToken','scriptUrl'].forEach(id => document.getElementById(id).addEventListener('input', markOk));
+['apiKey','apiToken','scriptUrlBalzani','scriptUrlCbii','scriptUrlPrime'].forEach(id =>
+  document.getElementById(id).addEventListener('input', markOk)
+);
 </script>
 </body>
 </html>
